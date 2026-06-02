@@ -1,5 +1,5 @@
 {
-  "name": "buscamed-esf-frontend",
+  "name": "webclone-ai-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,9 +11,8 @@
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
-    "@google/genai": "latest",
     "lucide-react": "latest",
-    "react-markdown": "latest"
+    "@google/genai": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",
