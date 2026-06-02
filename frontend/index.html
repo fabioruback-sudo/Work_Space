@@ -1,42 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BuscaMed ESF - Oportunidades</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-    /* Custom styles for markdown content to match Tailwind typography */
-    .markdown-body h3 {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1e40af; /* blue-800 */
-      margin-top: 1.5rem;
-      margin-bottom: 0.75rem;
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 0.25rem;
-    }
-    .markdown-body ul {
-      list-style-type: disc;
-      padding-left: 1.5rem;
-      margin-bottom: 1rem;
-      color: #374151; /* gray-700 */
-    }
-    .markdown-body li {
-      margin-bottom: 0.25rem;
-    }
-    .markdown-body strong {
-      font-weight: 600;
-      color: #111827; /* gray-900 */
-    }
-    .markdown-body p {
-      margin-bottom: 1rem;
-      color: #4b5563; /* gray-600 */
-    }
-  </style>
-</head>
-<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
-  <div id="root"></div>
-  <script type="module" src="./index.tsx"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebClone AI - Site Blueprint Extractor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        }
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    </head>
+<body class="bg-slate-50 text-slate-900 min-h-screen font-sans antialiased">
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
 <script type="module" src="/index.js"></script></body>
 </html>
