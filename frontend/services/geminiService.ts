@@ -1,54 +1,55 @@
 import { GoogleGenAI } from '@google/genai';
-import { SearchResult, GroundingChunk } from '../types.ts';
 
-// Initialize the SDK. It automatically picks up process.env.API_KEY in the environment.
+// Initialize the SDK. It automatically picks up process.env.API_KEY in this environment.
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY, vertexai: true });
 
-export const searchJobOpportunities = async (location: string): Promise<SearchResult> => {
-  const prompt = `
-Você é um assistente especializado em encontrar oportunidades de trabalho para médicos no Brasil.
-Sua tarefa é usar a busca do Google para encontrar editais, concursos públicos e processos seletivos **atualmente abertos ou muito recentes** para o cargo de "Médico da Estratégia de Saúde da Família" (ESF) ou "Médico de Família e Comunidade".
-
-${location.trim() !== '' ? `Foque especificamente na região/estado/cidade de: ${location}.` : 'Busque oportunidades em todo o Brasil, priorizando as mais recentes.'}
-
-Para cada oportunidade encontrada, você DEVE extrair e apresentar as seguintes informações de forma estruturada:
-- **Instituição/Cidade/Estado**
-- **Período de inscrição** (datas exatas de início e fim, se disponíveis)
-- **Valor da taxa de inscrição** (ou se há isenção)
-- **Forma de seleção** (ex: Prova objetiva, análise de currículo/títulos, entrevista)
-- **Salário/Remuneração**
-- **Carga horária**
-
-Apresente os resultados formatados em Markdown. 
-Use '###' para o nome de cada oportunidade (Instituição/Local).
-Use bullet points ('-') para listar os detalhes exigidos acima.
-Seja conciso e direto. Se não encontrar informações exatas para algum dos pontos no edital/resumo, escreva "Não informado no resumo".
-Não invente dados. Baseie-se estritamente nos resultados da busca.
-  `;
-
+export const transcribeImage = async (base64Image: string): Promise<string> => {
   try {
+    // Remove the data URL prefix if present (e.g., "data:image/jpeg;base64,")
+    const base64Data = base64Image.replace(/^data:image\/(png|jpeg|jpg);base64,/, '');
+
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: prompt,
-      config: {
-        // Enable Google Search grounding
-        tools: [{ googleSearch: {} }],
-        // Note: responseMimeType and responseSchema are NOT allowed when using googleSearch
+      contents: {
+        role: 'user',
+        parts: [
+          {
+            inlineData: {
+              mimeType: 'image/jpeg',
+              data: base64Data,
+            },
+          },
+          {
+            text: `Analise esta captura de tela de uma interface web. O objetivo é fornecer dados estruturados para que outra IA de automação possa interagir com a página usando o Chrome DevTools.
+
+Por favor, extraia as seguintes informações de forma clara e organizada:
+
+1. **Conteúdo Textual Geral**: Transcreva o texto principal legível na tela para dar contexto sobre o estado atual da página.
+
+2. **Mapeamento de Elementos Interativos**: Identifique TODOS os elementos clicáveis ou interativos (botões, links, campos de entrada de texto, checkboxes, menus dropdown, ícones de ação).
+   Para CADA elemento interativo, você DEVE fornecer sua localização espacial usando o formato de bounding box [ymin, xmin, ymax, xmax], onde os valores variam de 0 a 1000 (sendo [0, 0] o canto superior esquerdo e [1000, 1000] o canto inferior direito da imagem).
+
+Formate a lista de elementos interativos estritamente neste padrão:
+- [Tipo do Elemento] "Texto ou Descrição Visual do Elemento" -> [ymin, xmin, ymax, xmax]
+
+Exemplos:
+- [Botão] "Fazer Login" -> [450, 300, 500, 700]
+- [Input] "Digite sua pesquisa..." -> [100, 250, 140, 800]
+- [Link] "Esqueci minha senha" -> [520, 300, 540, 450]
+- [Ícone/Botão] "Lupa de pesquisa" -> [100, 810, 140, 850]
+
+Seja o mais preciso possível nas coordenadas para garantir que cliques automatizados funcionem corretamente.`,
+          },
+        ],
       },
+      config: {
+        temperature: 0.1, // Temperatura baixa para maior precisão e consistência nas coordenadas
+      }
     });
 
-    const text = response.text || "Nenhuma informação encontrada.";
-    
-    // Extract grounding chunks (URLs)
-    const groundingChunks: GroundingChunk[] = 
-      response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
-
-    return {
-      text,
-      sources: groundingChunks,
-    };
+    return response.text || "Nenhum conteúdo detectado ou erro na transcrição.";
   } catch (error) {
     console.error("Error calling Gemini API:", error);
-    throw new Error("Falha ao buscar oportunidades. Tente novamente mais tarde.");
+    throw new Error("Falha ao processar a imagem com a IA.");
   }
 };
