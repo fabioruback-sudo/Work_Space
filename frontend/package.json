@@ -1,5 +1,5 @@
 {
-  "name": "webclone-ai-frontend",
+  "name": "tab-transcriber-ai-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,8 +11,8 @@
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
-    "lucide-react": "latest",
-    "@google/genai": "latest"
+    "@google/genai": "latest",
+    "lucide-react": "latest"
   },
   "devDependencies": {
     "@types/node": "latest",
