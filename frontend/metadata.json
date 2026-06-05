@@ -1,4 +1,7 @@
 {
-  "name": "WebClone AI",
-  "description": "An AI-powered tool that analyzes a public URL and generates a comprehensive blueprint of its structure and pertinent information."
+  "name": "Tab Transcriber AI",
+  "description": "Monitora uma aba do navegador e transcreve seu conteúdo (texto e imagens) usando IA sempre que houver mudanças visuais.",
+  "requestFramePermissions": [
+    "display-capture"
+  ]
 }
