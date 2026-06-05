@@ -1,5 +1,5 @@
 {
-  "name": "webclone-ai",
+  "name": "tab-transcriber-ai",
   "workspaces": ["frontend", "backend"], 
   "scripts": {
     "dev-frontend": "npm run dev --prefix frontend",
